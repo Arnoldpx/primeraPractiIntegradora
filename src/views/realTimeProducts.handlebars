@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Products</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Real-Time Products</h1>
+    <ul id="product-list">
+        {{#each products}}
+            <li data-id="{{this.id}}">
+                {{this.title}} - {{this.description}} - ${{this.price}}
+                <button class="add-to-cart-button" data-id="{{this.id}}">Agregar al Carrito</button>
+                <button class="delete-product-button">Eliminar</button>
+            </li>
+        {{/each}}
+    </ul>
+
+    <form id="add-product-form">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <input type="text" name="thumbnail" placeholder="Thumbnail" required>
+        <input type="text" name="code" placeholder="Code" required>
+        <input type="number" name="stock" placeholder="Stock" required>
+        <button type="submit">Agregar producto</button>
+    </form>
+
+    <script>
+        const socket = io();
+
+        // Manejar clic en "Agregar al Carrito"
+        document.getElementById('product-list').addEventListener('click', (event) => {
+            if (event.target.classList.contains('add-to-cart-button')) {
+                const productId = event.target.getAttribute('data-id');
+                socket.emit('addProductToCart', { productId, userId: 'userIdDummy' }); // Reemplaza 'userIdDummy' con el ID de usuario real
+            }
+        });
+
+        // Actualizar la lista de productos
+        socket.on('updateProducts', (products) => {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const li = document.createElement('li');
+                li.setAttribute('data-id', product.id);
+                li.textContent = `${product.title} - ${product.description} - $${product.price}`;
+
+                const addToCartButton = document.createElement('button');
+                addToCartButton.textContent = 'Agregar al Carrito';
+                addToCartButton.setAttribute('data-id', product.id);
+                addToCartButton.classList.add('add-to-cart-button');
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Eliminar';
+                deleteButton.classList.add('delete-product-button');
+
+                li.appendChild(addToCartButton);
+                li.appendChild(deleteButton);
+                productList.appendChild(li);
+            });
+        });
+
+        // Agregar producto
+        document.getElementById('add-product-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const product = {};
+            formData.forEach((value, key) => {
+                product[key] = value;
+            });
+
+            socket.emit('createProduct', product);
+            e.target.reset();
+        });
+
+        // Escuchar eventos relacionados con el carrito
+        socket.on('cartUpdated', (cart) => {
+            console.log('Carrito actualizado:', cart);
+            // Aquí puedes realizar acciones adicionales en el frontend cuando el carrito se actualiza
+        });
+    </script>
+</body>
+</html>
