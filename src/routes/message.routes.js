@@ -1,4 +1,4 @@
-import MessageManager from '../dao/mongo/MessageManager.js'; // Importa el default export
+import MessageManager from '../dao/mongo/MessageManager.js'; 
 import { Router } from 'express';
 
 const router = Router();

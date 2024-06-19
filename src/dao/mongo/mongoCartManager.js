@@ -3,7 +3,7 @@ import CartsModel from '../model/carts.model.js';
 
 class MongoCartsManager  {
     constructor() {
-        // Podrías inicializar cosas aquí si es necesario
+      
     }
 
     async addProductToCart(userId, productId) {
@@ -19,7 +19,7 @@ class MongoCartsManager  {
             await cart.save();
 
             console.log('Product added to cart successfully');
-            return cart; // Retorna el carrito actualizado
+            return cart; 
         } catch (error) {
             console.error('Error adding product to cart:', error.message);
             throw error;
@@ -28,7 +28,7 @@ class MongoCartsManager  {
 
     async createCart() {
         try {
-            // Implementación para crear un nuevo carrito
+            
             const newCart = await CartsModel.create({
                 productos: [],
                 total: 0
