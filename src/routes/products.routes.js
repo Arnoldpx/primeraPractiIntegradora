@@ -1,7 +1,7 @@
 // routes/product.routes.js
 import { Router } from 'express';
 import fileSystemProductManager from '../dao/fileSystem/productManager.js';
-import MongoProductManager from '../dao/mongoDB/mongoProductManager.js';
+import MongoProductManager from '../dao/mongo/mongoProductManager.js';
 
 const router = Router();
 

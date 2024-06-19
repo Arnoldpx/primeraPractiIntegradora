@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import fileSystemCartManager from '../dao/fileSystem/cartManager.js';
-import MongoCartManager from '../dao/mongoDB/mongoCartManager.js';
+import MongoCartManager from '../dao/mongo/mongoCartManager.js';
 
 const router = Router();
 
